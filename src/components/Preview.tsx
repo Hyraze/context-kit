@@ -10,7 +10,7 @@ function renderStep(step: string): React.ReactNode {
   const parts = step.split(/(`[^`]+`)/)
   return parts.map((part, i) =>
     part.startsWith('`') && part.endsWith('`')
-      ? <code key={i} className="text-violet-400">{part.slice(1, -1)}</code>
+      ? <code key={i} className="text-violet-600 dark:text-violet-400">{part.slice(1, -1)}</code>
       : part
   )
 }
@@ -73,12 +73,12 @@ export default function Preview({ tools, assistants, projectName, selectedVersio
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-violet-400" aria-hidden="true" />
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-violet-500 dark:text-violet-400" aria-hidden="true" />
             Your context kit is ready
           </h2>
-          <p className="text-zinc-400 mt-1">
-            {files.length} files &middot; <span className="text-violet-400">{assistantNames}</span>
+          <p className="text-zinc-600 dark:text-zinc-400 mt-1">
+            {files.length} files &middot; <span className="text-violet-600 dark:text-violet-400">{assistantNames}</span>
             &nbsp;&middot;&nbsp;
             <span aria-label={`Tools: ${tools.map(t => t.name).join(', ')}`}>
               {tools.map(t => t.emoji).join(' ')}
@@ -100,23 +100,23 @@ export default function Preview({ tools, assistants, projectName, selectedVersio
 
       {/* Download error */}
       {downloadError && (
-        <div className="flex items-center gap-2 p-3 bg-red-950/40 border border-red-800/60 rounded-lg text-sm text-red-300" role="alert">
+        <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 rounded-lg text-sm text-red-700 dark:text-red-300" role="alert">
           <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
           {downloadError}
         </div>
       )}
 
       {/* Usage instructions */}
-      <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl text-sm space-y-3">
-        <p className="text-zinc-400 font-medium">How to use</p>
+      <div className="p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm space-y-3">
+        <p className="text-zinc-700 dark:text-zinc-400 font-medium">How to use</p>
         {assistants.map(a => (
           <div key={a.id}>
             {assistants.length > 1 && (
-              <p className="text-xs text-violet-400 mb-1" aria-label={`Instructions for ${a.name}`}>
+              <p className="text-sm text-violet-600 dark:text-violet-400 mb-1" aria-label={`Instructions for ${a.name}`}>
                 {a.logo} {a.name}
               </p>
             )}
-            <ol className="list-decimal list-inside space-y-1 text-zinc-300">
+            <ol className="list-decimal list-inside space-y-1 text-zinc-700 dark:text-zinc-300">
               {a.usageSteps.map((step, i) => (
                 <li key={i}>{renderStep(step)}</li>
               ))}
@@ -128,11 +128,11 @@ export default function Preview({ tools, assistants, projectName, selectedVersio
       {/* File explorer */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-[400px]">
         {/* File list */}
-        <nav className="lg:col-span-1 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden" aria-label="Generated files">
-          <div className="px-4 py-3 border-b border-zinc-800">
-            <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Files</p>
+        <nav className="lg:col-span-1 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden" aria-label="Generated files">
+          <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-800">
+            <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">Files</p>
           </div>
-          <div className="divide-y divide-zinc-800/50">
+          <div className="divide-y divide-zinc-200/50 dark:divide-zinc-800/50">
             {files.map(file => (
               <button
                 key={file.path}
@@ -142,8 +142,8 @@ export default function Preview({ tools, assistants, projectName, selectedVersio
                 aria-label={`View ${file.path}`}
                 className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
                   expandedFile === file.path
-                    ? 'bg-violet-950/40 text-violet-300'
-                    : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200'
+                    ? 'bg-violet-100 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 hover:text-zinc-800 dark:hover:text-zinc-200'
                 }`}
               >
                 {expandedFile === file.path ? (
@@ -152,36 +152,36 @@ export default function Preview({ tools, assistants, projectName, selectedVersio
                   <ChevronRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                 )}
                 <FileText className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                <span className="text-xs font-mono truncate">{file.path}</span>
+                <span className="text-sm font-mono truncate">{file.path}</span>
               </button>
             ))}
           </div>
         </nav>
 
         {/* File content */}
-        <div className="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden flex flex-col">
+        <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col">
           {activeFile && (
             <>
-              <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
-                <span className="text-xs font-mono text-zinc-400">{activeFile.path}</span>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200 dark:border-zinc-800">
+                <span className="text-sm font-mono text-zinc-500 dark:text-zinc-400">{activeFile.path}</span>
                 <button
                   type="button"
                   onClick={() => handleCopy(activeFile.path, activeFile.content)}
                   aria-label={copied === activeFile.path ? 'Copied to clipboard' : copyFailed ? 'Copy failed — select text manually' : `Copy ${activeFile.path} to clipboard`}
                   aria-live="polite"
-                  className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-zinc-400 hover:text-zinc-200 bg-zinc-800 hover:bg-zinc-700 rounded transition-colors"
+                  className="flex items-center gap-1.5 px-2.5 py-1 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded transition-colors"
                 >
                   {copied === activeFile.path ? (
-                    <><Check className="w-3 h-3 text-green-400" aria-hidden="true" /><span className="text-green-400">Copied</span></>
+                    <><Check className="w-3 h-3 text-green-600 dark:text-green-400" aria-hidden="true" /><span className="text-green-600 dark:text-green-400">Copied</span></>
                   ) : copyFailed ? (
-                    <><X className="w-3 h-3 text-red-400" aria-hidden="true" /><span className="text-red-400">Select manually</span></>
+                    <><X className="w-3 h-3 text-red-600 dark:text-red-400" aria-hidden="true" /><span className="text-red-600 dark:text-red-400">Select manually</span></>
                   ) : (
                     <><Copy className="w-3 h-3" aria-hidden="true" />Copy</>
                   )}
                 </button>
               </div>
               <div className="flex-1 overflow-auto p-4">
-                <pre className="text-xs text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed">
+                <pre className="text-sm text-zinc-800 dark:text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed">
                   {activeFile.content}
                 </pre>
               </div>
@@ -192,4 +192,3 @@ export default function Preview({ tools, assistants, projectName, selectedVersio
     </div>
   )
 }
-

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, ArrowLeft, Package } from 'lucide-react'
+import { ArrowRight, ArrowLeft, Package, Sun, Moon } from 'lucide-react'
 import ToolPicker from './components/ToolPicker'
 import AssistantPicker from './components/AssistantPicker'
 import Preview from './components/Preview'
@@ -66,6 +66,12 @@ function writeUrlState(
   window.history.replaceState(null, '', newUrl)
 }
 
+function getInitialTheme(): 'light' | 'dark' {
+  const stored = localStorage.getItem('theme')
+  if (stored === 'light' || stored === 'dark') return stored
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
 export default function App() {
   const initial = useMemo(() => readUrlState(), [])
   const [step, setStep] = useState(initial.step)
@@ -74,6 +80,12 @@ export default function App() {
   const [projectName, setProjectName] = useState(initial.projectName)
   const [selectedVersions, setSelectedVersions] = useState<Record<string, string>>(initial.selectedVersions)
   const [customRules, setCustomRules] = useState(initial.customRules)
+  const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme)
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    localStorage.setItem('theme', theme)
+  }, [theme])
 
   useEffect(() => {
     writeUrlState(selectedTools, selectedAssistants, projectName, step, selectedVersions, customRules)
@@ -103,48 +115,67 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* Header */}
-      <header className="border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur sticky top-0 z-10">
+      <header className="border-b border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50/80 dark:bg-zinc-950/80 backdrop-blur sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Package className="w-5 h-5 text-violet-400" aria-hidden="true" />
-            <span className="font-bold text-white tracking-tight">context-kit</span>
-            <span className="text-xs text-zinc-500 hidden sm:inline">
+            <Package className="w-5 h-5 text-violet-500 dark:text-violet-400" aria-hidden="true" />
+            <span className="font-bold text-zinc-900 dark:text-white tracking-tight">context-kit</span>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400 hidden sm:inline">
               — AI context for your dev stack
             </span>
           </div>
 
-          {/* Step indicator */}
-          <ol className="flex items-center gap-2" aria-label="Progress">
-            {STEPS.map((label, i) => (
-              <li key={label} className="flex items-center gap-2">
-                <div
-                  className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
-                    i === step ? 'text-violet-300' : i < step ? 'text-zinc-500' : 'text-zinc-700'
-                  }`}
-                  aria-current={i === step ? 'step' : undefined}
-                >
-                  <span
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+          <div className="flex items-center gap-4">
+            {/* Step indicator */}
+            <ol className="flex items-center gap-2" aria-label="Progress">
+              {STEPS.map((label, i) => (
+                <li key={label} className="flex items-center gap-2">
+                  <div
+                    className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
                       i === step
-                        ? 'bg-violet-600 text-white'
+                        ? 'text-violet-600 dark:text-violet-300'
                         : i < step
-                        ? 'bg-zinc-700 text-zinc-400'
-                        : 'bg-zinc-800 text-zinc-600'
+                        ? 'text-zinc-500 dark:text-zinc-400'
+                        : 'text-zinc-400 dark:text-zinc-500'
                     }`}
-                    aria-hidden="true"
+                    aria-current={i === step ? 'step' : undefined}
                   >
-                    {i < step ? '✓' : i + 1}
-                  </span>
-                  <span className="hidden sm:inline">{label}</span>
-                </div>
-                {i < STEPS.length - 1 && (
-                  <span className="text-zinc-700 text-xs" aria-hidden="true">›</span>
-                )}
-              </li>
-            ))}
-          </ol>
+                    <span
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+                        i === step
+                          ? 'bg-violet-600 text-white'
+                          : i < step
+                          ? 'bg-zinc-300 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300'
+                          : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400'
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {i < step ? '✓' : i + 1}
+                    </span>
+                    <span className="hidden sm:inline">{label}</span>
+                  </div>
+                  {i < STEPS.length - 1 && (
+                    <span className="text-zinc-400 dark:text-zinc-500 text-xs" aria-hidden="true">›</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+
+            {/* Theme toggle */}
+            <button
+              type="button"
+              onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            >
+              {theme === 'dark'
+                ? <Sun className="w-4 h-4" aria-hidden="true" />
+                : <Moon className="w-4 h-4" aria-hidden="true" />
+              }
+            </button>
+          </div>
         </div>
       </header>
 
@@ -153,7 +184,7 @@ export default function App() {
         {/* Project name input (step 0 only) */}
         {step === 0 && (
           <div className="mb-8 flex items-center gap-3">
-            <label htmlFor="project-name" className="text-sm text-zinc-500 shrink-0">
+            <label htmlFor="project-name" className="text-sm text-zinc-600 dark:text-zinc-400 shrink-0">
               Project name:
             </label>
             <input
@@ -161,7 +192,7 @@ export default function App() {
               type="text"
               value={projectName}
               onChange={e => setProjectName(e.target.value || 'my-project')}
-              className="bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-zinc-100 focus:outline-none focus:border-violet-500 transition-colors w-48"
+              className="bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-violet-500 transition-colors w-48"
               placeholder="my-project"
               aria-describedby="project-name-hint"
             />
@@ -196,20 +227,20 @@ export default function App() {
         )}
 
         {/* Navigation */}
-        <div className="flex items-center justify-between mt-10 pt-6 border-t border-zinc-800/60">
+        <div className="flex items-center justify-between mt-10 pt-6 border-t border-zinc-200/60 dark:border-zinc-800/60">
           <button
             type="button"
             onClick={() => setStep(s => s - 1)}
             disabled={step === 0}
             aria-label="Go to previous step"
-            className="flex items-center gap-2 px-4 py-2.5 text-sm text-zinc-400 hover:text-zinc-200 disabled:opacity-0 disabled:pointer-events-none transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 disabled:opacity-0 disabled:pointer-events-none transition-colors"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             Back
           </button>
 
           {stepHint && (
-            <p className="text-xs text-zinc-600" aria-live="polite">{stepHint}</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400" aria-live="polite">{stepHint}</p>
           )}
 
           {step < STEPS.length - 1 ? (
@@ -227,7 +258,7 @@ export default function App() {
             <button
               type="button"
               onClick={handleReset}
-              className="flex items-center gap-2 px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium rounded-lg transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-sm font-medium rounded-lg transition-colors"
             >
               Start over
             </button>
@@ -236,8 +267,8 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800/60 mt-20">
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between text-xs text-zinc-600">
+      <footer className="border-t border-zinc-200/60 dark:border-zinc-800/60 mt-20">
+        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
           <span>context-kit — open source</span>
           <span>Works with Claude Code · Cursor · Windsurf · GitHub Copilot · any LLM</span>
         </div>
