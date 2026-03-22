@@ -4,7 +4,7 @@
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Ko-fi](https://img.shields.io/badge/support-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/hanish)
-[![Live](https://img.shields.io/badge/try%20it-live-7c3aed)](https://context-kit.vercel.app)
+[![Live](https://img.shields.io/badge/try%20it-live-7c3aed)](https://ck.collectiveai.tools)
 
 > Generate AI context for your dev stack — works with Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI, or any LLM.
 
@@ -15,7 +15,7 @@ Pick your tools. Pick your AI assistant. Download a zip with:
 - `.env.example` pre-filled for your stack
 - Slash commands: `/plan`, `/adr`, `/architecture`, `/code-review`, `/build-fix`
 
-**[Try it live →](https://context-kit.vercel.app)**  ·  `npm run dev` to run locally
+**[Try it live →](https://ck.collectiveai.tools)**  ·  `npm run dev` to run locally
 
 ---
 
