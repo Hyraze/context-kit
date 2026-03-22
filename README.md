@@ -1,5 +1,11 @@
 # context-kit
 
+[![CI](https://github.com/Hyraze/context-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/Hyraze/context-kit/actions/workflows/ci.yml)
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Ko-fi](https://img.shields.io/badge/support-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/hanish)
+[![Live](https://img.shields.io/badge/try%20it-live-7c3aed)](https://context-kit.vercel.app)
+
 > Generate AI context for your dev stack — works with Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI, or any LLM.
 
 Pick your tools. Pick your AI assistant. Download a zip with:
@@ -302,7 +308,7 @@ It reads your folder structure, dependencies, and existing ADRs — so the outpu
 ## Development
 
 ```bash
-git clone https://github.com/your-org/context-kit
+git clone https://github.com/Hyraze/context-kit
 cd context-kit
 npm install
 npm run dev     # http://localhost:5173
